@@ -32,12 +32,11 @@ func main() {
 	toClipboard := flag.Bool("to-clipboard", false, "set result to the clipboard")
 	get:= flag.Bool("get", false, "get message")
 	code:= flag.String("code", "", "retrieve code")
+	showId := flag.Bool("show-id", false, "show the code instead of url")
+	showQr := flag.Bool("show-qr", false, "show the qr code")
 	flag.Parse()
 
 	if *post {
-		postFlag := flag.NewFlagSet("post", flag.ExitOnError)
-		showId := postFlag.Bool("show-id", false, "show the code instead of url")
-		showQr := postFlag.Bool("show-qr", false, "show the qr code")
 		var msg string
 		if *fromClipboard {
 			b, err := clipboard.ReadAll()
