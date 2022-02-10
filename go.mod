@@ -1,4 +1,4 @@
-module webclipClient
+module github.com/xh-dev-g/webclipClient
 
 go 1.17
 
