@@ -26,12 +26,12 @@ type GetResponse struct {
 }
 
 func main() {
-	host:= flag.String("host", "https://webclip2.mytools.express/", "host to operation with webclip2")
-	post:= flag.Bool("post", false, "post message")
+	host := flag.String("host", "https://webclip2.mytools.express/", "host to operation with webclip2")
+	post := flag.Bool("post", false, "post message")
 	fromClipboard := flag.Bool("from-clipboard", false, "get from the clipboard")
 	toClipboard := flag.Bool("to-clipboard", false, "set result to the clipboard")
-	get:= flag.Bool("get", false, "get message")
-	code:= flag.String("code", "", "retrieve code")
+	get := flag.Bool("get", false, "get message")
+	code := flag.String("code", "", "retrieve code")
 	showId := flag.Bool("show-id", false, "show the code instead of url")
 	showQr := flag.Bool("show-qr", false, "show the qr code")
 	flag.Parse()
@@ -51,24 +51,24 @@ func main() {
 			}
 			msg = string(b)
 		}
-		msg = strings.ReplaceAll(msg, "\r","\\r")
-		msg = strings.ReplaceAll(msg, "\n","\\n")
+		msg = strings.ReplaceAll(msg, "\r", "\\r")
+		msg = strings.ReplaceAll(msg, "\n", "\\n")
 
-		url := *host+"api/msg/create"
+		url := *host + "api/msg/create"
 		responseObj := PostResponse{}
 		response, err := http.Post(url, "application/json", bytes.NewBufferString("{\"msg\":\""+msg+"\"}"))
 		if err != nil {
 			panic(err)
-		} else if msg, err := io.ReadAll(response.Body); err != nil{
+		} else if msg, err := io.ReadAll(response.Body); err != nil {
 			panic(err)
-		} else if err:=json.Unmarshal(msg, &responseObj); err != nil {
+		} else if err := json.Unmarshal(msg, &responseObj); err != nil {
 			panic(err)
 		} else {
-			url :="https://webclip2.mytools.express/#/get?id="+responseObj.Id
+			url := "https://webclip2.mytools.express/#/get?id=" + responseObj.Id
 			if *showQr {
 				config := qrterminal.Config{
-					Level: qrterminal.M,
-					Writer: os.Stdout,
+					Level:     qrterminal.M,
+					Writer:    os.Stdout,
 					BlackChar: qrterminal.WHITE,
 					WhiteChar: qrterminal.BLACK,
 					QuietZone: 1,
@@ -90,12 +90,12 @@ func main() {
 				}
 			}
 		}
-	} else if *get && *code != ""{
-		url := *host+"api/msg/retrieve"
+	} else if *get && *code != "" {
+		url := *host + "api/msg/retrieve"
 		codeObj := GetRequest{}
 		codeObj.Code = *code
 		responseObj := GetResponse{}
-		response, err := http.Post(url,"application/json", bytes.NewBufferString("{\"code\":\""+*code+"\"}"))
+		response, err := http.Post(url, "application/json", bytes.NewBufferString("{\"code\":\""+*code+"\"}"))
 		if err != nil {
 			panic(err)
 		} else if msg, err := io.ReadAll(response.Body); err != nil {
@@ -103,9 +103,8 @@ func main() {
 		} else if err := json.Unmarshal(msg, &responseObj); err != nil {
 			panic(err)
 		} else {
-			responseObj.Msg = strings.ReplaceAll(responseObj.Msg, "\\r","\r")
-			responseObj.Msg = strings.ReplaceAll(responseObj.Msg, "\\n","\n")
-			print(responseObj.Msg)
+			responseObj.Msg = strings.ReplaceAll(responseObj.Msg, "\\r", "\r")
+			responseObj.Msg = strings.ReplaceAll(responseObj.Msg, "\\n", "\n")
 			if *toClipboard {
 				err := clipboard.WriteAll(responseObj.Msg)
 				if err != nil {
