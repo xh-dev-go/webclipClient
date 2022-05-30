@@ -111,6 +111,8 @@ func main() {
 				if err != nil {
 					return
 				}
+			} else {
+				fmt.Println(responseObj.Msg)
 			}
 		}
 	} else {
